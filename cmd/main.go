@@ -5,6 +5,7 @@ import (
 	"catalog-products/internal/database/driver"
 	"catalog-products/internal/database/repository"
 	"catalog-products/internal/helpers"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/subosito/gotenv"
@@ -33,5 +34,6 @@ func main() {
 	app.Patch("/api/v1/products/:id/trash", pc.TrashProduct())     // м'яке видалення
 	app.Patch("/api/v1/products/:id/recover", pc.RecoverProduct()) // відновлення
 	app.Delete("/api/v1/products/:id", pc.RemoveProduct())         // остаточне видалення товара
-	helpers.Log.Fatal(app.Listen(":8080"))
+
+	helpers.Log.Fatal(app.Listen(":" + os.Getenv("POSTGRES_PRODUCTS_API_PORT")))
 }

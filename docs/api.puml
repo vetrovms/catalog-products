@@ -1,0 +1,115 @@
+@startuml
+hide empty members
+set namespaceSeparator none
+
+interface "/api/v1/products" {
+}
+
+class "GET /api/v1/products" {
+.. query ..
+{field} string color
+{field} number price_min
+{field} number price_max
+{field} string title
+{field} string manufacturer
+{field} string search_type
+{field} string sort
+.. responses ..
+200: {field} <i>not specified</i> 
+}
+
+
+
+class "POST /api/v1/products" {
+
+.. responses ..
+200: {field} <i>not specified</i> 
+400: {field} <i>not specified</i> 
+}
+
+
+
+"/api/v1/products" ..> "GET /api/v1/products"
+"/api/v1/products" ..> "POST /api/v1/products"
+
+
+
+interface "/api/v1/products/{id}" {
+}
+
+class "GET /api/v1/products/{id}" {
+.. path ..
+{field} integer <b>id</b>
+.. responses ..
+200: {field} <i>not specified</i> 
+400: {field} <i>not specified</i> 
+404: {field} <i>not specified</i> 
+}
+
+
+
+class "PUT /api/v1/products/{id}" {
+.. path ..
+{field} integer <b>id</b>
+.. responses ..
+200: {field} <i>not specified</i> 
+400: {field} <i>not specified</i> 
+404: {field} <i>not specified</i> 
+}
+
+
+
+class "DELETE /api/v1/products/{id}" {
+.. path ..
+{field} integer <b>id</b>
+.. responses ..
+200: {field} <i>not specified</i> 
+400: {field} <i>not specified</i> 
+404: {field} <i>not specified</i> 
+}
+
+
+
+"/api/v1/products/{id}" ..> "DELETE /api/v1/products/{id}"
+"/api/v1/products/{id}" ..> "GET /api/v1/products/{id}"
+"/api/v1/products/{id}" ..> "PUT /api/v1/products/{id}"
+
+
+
+interface "/api/v1/products/{id}/trash" {
+}
+
+class "PATCH /api/v1/products/{id}/trash" {
+.. path ..
+{field} integer <b>id</b>
+.. responses ..
+200: {field} <i>not specified</i> 
+400: {field} <i>not specified</i> 
+404: {field} <i>not specified</i> 
+}
+
+
+
+"/api/v1/products/{id}/trash" ..> "PATCH /api/v1/products/{id}/trash"
+
+
+
+interface "/api/v1/products/{id}/recover" {
+}
+
+class "PATCH /api/v1/products/{id}/recover" {
+.. path ..
+{field} integer <b>id</b>
+.. responses ..
+200: {field} <i>not specified</i> 
+400: {field} <i>not specified</i> 
+404: {field} <i>not specified</i> 
+}
+
+
+
+"/api/v1/products/{id}/recover" ..> "PATCH /api/v1/products/{id}/recover"
+
+
+
+@enduml

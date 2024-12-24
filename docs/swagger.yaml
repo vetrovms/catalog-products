@@ -1,0 +1,299 @@
+openapi: 3.0.3
+info:
+  title: Каталог товарів - OpenAPI 3.0
+  description: |-
+    Веб застосунок з API за протоколом HTTP для обслуговування списку товарів вітрини магазину.
+    Посилання на репозиторій github:
+    - [https://github.com/vetrovms/catalog-products](https://github.com/vetrovms/catalog-products)
+  contact:
+    email: vetrovms@proton.me
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+tags:
+  - name: product
+    description: Товари
+paths:
+  /api/v1/products:
+    get:
+      tags:
+        - product
+      summary: Список товарів
+      description: "Доступний пошук за полями (одним чи декількома): Колір, Ціна, Виробник, Назва; можна обрати тип пошуку: за співпадінням по всім критеріям чи будь-якою з заданих. Сортування за полями (одним чи декількома): Назва, Ціна, Строк придатності"
+      operationId: findProducts
+      parameters:
+        - name: color
+          in: query
+          description: Колір
+          required: false
+          schema:
+            type: string
+        - name: price_min
+          in: query
+          description: Ціна, від
+          required: false
+          schema:
+            type: number
+        - name: price_max
+          in: query
+          description: Ціна, до
+          required: false
+          schema:
+            type: number
+        - name: title
+          in: query
+          description: Назва
+          required: false
+          schema:
+            type: string
+        - name: manufacturer
+          in: query
+          description: Виробник
+          required: false
+          schema:
+            type: string
+        - name: search_type
+          in: query
+          description: Тип пошуку (сукупність усіх параметрів або відповідність хоча б одному)
+          required: false
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Сортування
+          required: false
+          explode: true
+          schema:
+            type: string
+            default: title_asc
+            enum:
+              - title_asc
+              - title_desc
+              - bestbefore_asc
+              - bestbefore_desc
+              - price_asc
+              - price_desc
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'          
+    post:
+      tags:
+        - product
+      summary: Створення нового товара
+      description: Створення нового товара
+      operationId: addProduct
+      requestBody:
+        description: Створення нового товара
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'          
+        '400':
+          description: Invalid input
+  /api/v1/products/{id}:
+    put:
+      tags:
+        - product
+      summary: Оновлення існуючого товара
+      description: Оновлення існуючого товара за id
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID товара
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Оновлення існуючого товара
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Product'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+    get:
+      tags:
+        - product
+      summary: Знайти товар за ID
+      description: Повертає товар
+      operationId: getProductById
+      parameters:
+        - name: id
+          in: path
+          description: ID товара
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+    delete:
+      tags:
+        - product
+      summary: Остаточне видалення товара за ID
+      description: Видаляє товар з бази даних
+      operationId: removeProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID товара
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+  /api/v1/products/{id}/trash:
+    patch:
+      tags:
+        - product
+      summary: М'яке видалення товара за ID
+      description: Видаляє товар з бази даних
+      operationId: trashProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID товара
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+  /api/v1/products/{id}/recover:
+    patch:
+      tags:
+        - product
+      summary: Відновлення м'яко видаленого товара за ID
+      description: Відновлення м'яко видаленого товара за ID
+      operationId: recoverProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID товара
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'          
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+
+components:
+  schemas:
+    Product:
+      required:
+        - title
+        - price
+        - currency
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        title:
+          type: string
+          example: teapot
+        price:
+          type: number
+          example: 123.45
+        color:
+          type: string
+          example: "#FFFFFF"
+        currency:
+          type: string
+          example: UAH
+        bestbefore:
+          type: string
+          format: date-time
+        manufacturer:
+          type: string
+          example: test
+  requestBodies:
+    Product:
+      description: Product object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Product'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/Product'
