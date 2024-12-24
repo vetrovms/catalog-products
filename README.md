@@ -11,7 +11,7 @@ export POSTGRES_PRODUCTS_API_DSN="user=postgres password=postgres host=postgres_
 export POSTGRES_PRODUCTS_API_URL="postgres://postgres:postgres@postgres_products_api:5432/catalog_products?sslmode=disable" && \
 export POSTGRES_DB=catalog_products && \
 export POSTGRES_USER=postgres && \
-export POSTGRES_PRODUCTS_API_PORTS="'8080:8080'"
+export POSTGRES_PRODUCTS_API_PORTS=8080:8080
 2. Локально з директорії `config` запустити докер `docker compose up`, або завантажити вміст директорії на сервер та запустити там докер.
 
 > Запуск міграцій відбувається автоматично при запуску контейнера. Для запуску вручну (при релізі) виконати в контейнері команду
