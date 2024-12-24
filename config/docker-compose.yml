@@ -1,0 +1,44 @@
+services:
+  postgres_products_api:
+    container_name: postgres_products_api
+    image: postgres:latest
+    restart: always
+    networks:
+     - go-products-api
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PRODUCTS_API_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_PRODUCTS_API_USER}
+      POSTGRES_DATABASE: ${POSTGRES_PRODUCTS_API_DATABASE}
+      POSTGRES_DSN: ${POSTGRES_PRODUCTS_API_DSN}
+      POSTGRES_DB: ${POSTGRES_PRODUCTS_API_DATABASE}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s  
+  webserver_products_api:
+    container_name: webserver_products_api
+    restart: always
+    ports:
+      - '8080:8080'
+    build:
+      context: .
+      args:
+        ARG_POSTGRES_PRODUCTS_API_PASSWORD: ${POSTGRES_PRODUCTS_API_PASSWORD}
+        ARG_POSTGRES_PRODUCTS_API_USER: ${POSTGRES_PRODUCTS_API_USER}
+        ARG_POSTGRES_PRODUCTS_API_DATABASE: ${POSTGRES_PRODUCTS_API_DATABASE}
+        ARG_POSTGRES_PRODUCTS_API_DSN: ${POSTGRES_PRODUCTS_API_DSN}
+        ARG_POSTGRES_PRODUCTS_API_URL: ${POSTGRES_PRODUCTS_API_URL}
+    depends_on:
+      postgres_products_api:
+        condition: service_healthy
+        restart: true
+    logging:
+      options:
+        max-size: 10m
+    networks:
+      go-products-api:
+networks:
+  go-products-api:
+    driver: bridge

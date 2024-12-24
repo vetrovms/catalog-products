@@ -1,0 +1,12 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[user]
+	name = Thread
+	email = thread@vipdesign.com
+[remote "origin"]
+    url = https://github.com/vetrovms/catalog-products.git
