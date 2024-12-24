@@ -52,11 +52,11 @@ WORKDIR /app
 RUN go get -u github.com/gofiber/fiber/v3 && \
     go get gorm.io/gorm && \
     go get gorm.io/driver/postgres && \
-    go get github.com/subosito/gotenv
+    go get github.com/subosito/gotenv && \
+    go mod tidy
 
-# GO білд
-RUN go mod tidy && \
-    go build -C cmd -o app
+# білд
+RUN go build -C cmd -o app
 
 # міграції та запуск застосунку
 ENTRYPOINT migrate -database "$POSTGRES_PRODUCTS_API_URL" -path internal/database/migrations up && cmd/app

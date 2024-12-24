@@ -21,7 +21,7 @@ services:
     container_name: webserver_products_api
     restart: always
     ports:
-      - '8080:8080'
+      - ${POSTGRES_PRODUCTS_API_PORTS}
     build:
       context: .
       args:
