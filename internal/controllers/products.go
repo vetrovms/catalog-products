@@ -39,7 +39,10 @@ func (pc *ProductController) GetProduct() func(c *fiber.Ctx) error {
 			return c.Status(http.StatusNotFound).SendString(err.Error())
 		}
 
-		return c.JSON(product)
+		//return c.JSON(product) // чомусь не спрацьовує MarshalJSON для об'єкта, але спрацьовує для слайса (getProducts)
+		json, _ := product.MarshalJSON()
+		c.Set("Content-Type", "application/json")
+		return c.SendString(string(json))
 	}
 }
 
@@ -61,7 +64,9 @@ func (pc *ProductController) AddProduct() func(c *fiber.Ctx) error {
 		productRequest.Fill(&product)
 		pc.Repo.Save(&product)
 
-		return c.JSON(product)
+		json, _ := product.MarshalJSON()
+		c.Set("Content-Type", "application/json")
+		return c.SendString(string(json))
 	}
 }
 
@@ -93,7 +98,9 @@ func (pc *ProductController) UpdateProduct() func(c *fiber.Ctx) error {
 		productRequest.Fill(&product)
 		pc.Repo.Save(&product)
 
-		return c.JSON(product)
+		json, _ := product.MarshalJSON()
+		c.Set("Content-Type", "application/json")
+		return c.SendString(string(json))
 	}
 }
 
@@ -112,7 +119,9 @@ func (pc *ProductController) TrashProduct() func(c *fiber.Ctx) error {
 		}
 
 		pc.Repo.SoftDelete(&product)
-		return c.JSON(product)
+		json, _ := product.MarshalJSON()
+		c.Set("Content-Type", "application/json")
+		return c.SendString(string(json))
 	}
 }
 
@@ -131,7 +140,10 @@ func (pc *ProductController) RecoverProduct() func(c *fiber.Ctx) error {
 		}
 
 		pc.Repo.Recover(&product)
-		return c.JSON(product)
+
+		json, _ := product.MarshalJSON()
+		c.Set("Content-Type", "application/json")
+		return c.SendString(string(json))
 	}
 }
 
@@ -150,7 +162,10 @@ func (pc *ProductController) RemoveProduct() func(c *fiber.Ctx) error {
 		}
 
 		pc.Repo.Delete(&product)
-		return c.JSON(product)
+
+		json, _ := product.MarshalJSON()
+		c.Set("Content-Type", "application/json")
+		return c.SendString(string(json))
 	}
 }
 

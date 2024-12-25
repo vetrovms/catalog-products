@@ -14,9 +14,9 @@ func TestValidate(t *testing.T) {
 		Currency: "test",
 	}
 	expected := []string{
-		"[Price]: не відповідає правилу 'gte' 0",
-		"[Color]: не відповідає правилу 'iscolor' ",
-		"[Currency]: не відповідає правилу 'iso4217' ",
+		"Price: значення має бути більше 0",
+		"Color: значення має відповідати формату кольора",
+		"Currency: значення має відповідати формату iso4217",
 	}
 
 	err := test.Validate()
