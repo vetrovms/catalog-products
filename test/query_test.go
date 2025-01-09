@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"catalog-products/internal/helpers"
+	"catalog-products/internal/query"
 	"testing"
 
 	"gotest.tools/assert"
@@ -33,7 +33,7 @@ func TestSearchQuery(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got1, got2 := helpers.SearchQuery(test.input)
+		got1, got2 := query.SearchQuery(test.input)
 		assert.Equal(t, test.want1, got1)
 		for i, want := range test.want2 {
 			assert.Equal(t, want, got2[i])
@@ -57,7 +57,7 @@ func TestOrderQuery(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got := helpers.OrderQuery(test.input)
+		got := query.OrderQuery(test.input)
 		assert.Equal(t, test.want, got)
 	}
 }

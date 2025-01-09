@@ -2,9 +2,7 @@ package request
 
 import (
 	"catalog-products/internal/models"
-	"fmt"
-
-	"github.com/go-playground/validator/v10"
+	"catalog-products/internal/validator"
 )
 
 type ProductRequest struct {
@@ -16,7 +14,7 @@ type ProductRequest struct {
 	Manufacturer string  `json:"manufacturer" validate:"omitempty,max=255"`
 }
 
-func (r ProductRequest) Fill(m *models.Product) {
+func (r ProductRequest) Fill(m *models.ProductDTO) {
 	if r.Title != "" {
 		m.Title = r.Title
 	}
@@ -38,25 +36,5 @@ func (r ProductRequest) Fill(m *models.Product) {
 }
 
 func (r ProductRequest) Validate() []string {
-	var res []string
-	validate := validator.New()
-	errs := validate.Struct(r)
-
-	if errs != nil {
-		errMsgs := make([]string, 0)
-		errMap := map[string]string{
-			"max":      ": довжина має бути не більше %s символів",
-			"gte":      ": значення має бути більше %s",
-			"lte":      ": значення має бути менше %s",
-			"iscolor":  ": значення має відповідати формату кольора%s",
-			"iso4217":  ": значення має відповідати формату iso4217%s",
-			"datetime": ": невірний формати дати %s",
-		}
-		for _, err := range errs.(validator.ValidationErrors) {
-			errMsgs = append(errMsgs, err.StructField()+fmt.Sprintf(errMap[err.Tag()], err.Param()))
-		}
-		return errMsgs
-	}
-
-	return res
+	return validator.Validate(r)
 }

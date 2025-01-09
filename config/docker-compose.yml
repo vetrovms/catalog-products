@@ -30,6 +30,7 @@ services:
         ARG_POSTGRES_PRODUCTS_API_DATABASE: ${POSTGRES_PRODUCTS_API_DATABASE}
         ARG_POSTGRES_PRODUCTS_API_DSN: ${POSTGRES_PRODUCTS_API_DSN}
         ARG_POSTGRES_PRODUCTS_API_URL: ${POSTGRES_PRODUCTS_API_URL}
+        ARG_LOG_PATH: ${LOG_PATH}
     depends_on:
       postgres_products_api:
         condition: service_healthy

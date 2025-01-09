@@ -1,4 +1,4 @@
-package helpers
+package query
 
 import (
 	"slices"
@@ -29,8 +29,11 @@ func sortWhiteList() map[string]string {
 	}
 }
 
-func SearchQuery(params map[string]string) (whereCond string, bindParams []any) {
+func SearchQuery(params map[string]string) (string, []any) {
 	var tmpWhere []string
+	var bindParams []any
+	var whereCond string
+
 	if params["color"] != "" {
 		tmpWhere = append(tmpWhere, "color = ?")
 		bindParams = append(bindParams, params["color"])
@@ -56,7 +59,7 @@ func SearchQuery(params map[string]string) (whereCond string, bindParams []any) 
 		searchType = params["search_type"]
 	}
 	whereCond = strings.Join(tmpWhere, " "+searchType+" ")
-	return
+	return whereCond, bindParams
 }
 
 func OrderQuery(params map[string]string) string {
