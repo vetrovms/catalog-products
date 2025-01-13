@@ -21,64 +21,64 @@ func NewProductRepo(conn *gorm.DB) ProductRepo {
 }
 
 // List. Повертає список товарів
-func (rep *ProductRepo) List(ctx context.Context, params map[string]string) []models.Product {
+func (rep *ProductRepo) List(ctx context.Context, params map[string]string) ([]models.Product, error) {
 	var products []models.Product
 	cond, bindParams := query.SearchQuery(params)
 	orderQuery := query.OrderQuery(params)
-	rep.db.WithContext(ctx).Where(cond, bindParams...).Order(orderQuery).Find(&products)
-	return products
+	err := rep.db.WithContext(ctx).Where(cond, bindParams...).Order(orderQuery).Find(&products).Error
+	return products, err
 }
 
 // One. Повертає товар за ідентифікатором
-func (rep *ProductRepo) One(ctx context.Context, id int) models.Product {
+func (rep *ProductRepo) One(ctx context.Context, id int) (models.Product, error) {
 	var product models.Product
-	rep.db.WithContext(ctx).First(&product, id)
+	err := rep.db.WithContext(ctx).First(&product, id).Error
 	// rep.db.WithContext(ctx).Exec("select pg_sleep(10);") // @debug
-	return product
+	return product, err
 }
 
 // OneUnscoped. Повертає м'яко видалений товар за ідентифікатором
-func (rep *ProductRepo) OneUnscoped(ctx context.Context, id int) models.Product {
+func (rep *ProductRepo) OneUnscoped(ctx context.Context, id int) (models.Product, error) {
 	var product models.Product
-	rep.db.WithContext(ctx).Unscoped().First(&product, id)
-	return product
+	err := rep.db.WithContext(ctx).Unscoped().First(&product, id).Error
+	return product, err
 }
 
 // Create. Створює новий товар
-func (rep *ProductRepo) Create(ctx context.Context, product *models.Product) {
-	rep.db.WithContext(ctx).Create(&product)
+func (rep *ProductRepo) Create(ctx context.Context, product *models.Product) error {
+	return rep.db.WithContext(ctx).Create(&product).Error
 }
 
 // Save. Зберігає товар
-func (rep *ProductRepo) Save(ctx context.Context, product *models.Product) {
-	rep.db.WithContext(ctx).Save(&product)
+func (rep *ProductRepo) Save(ctx context.Context, product *models.Product) error {
+	return rep.db.WithContext(ctx).Save(&product).Error
 }
 
 // SoftDelete. М'яке видалення товара
-func (rep *ProductRepo) SoftDelete(ctx context.Context, product *models.Product) {
-	rep.db.WithContext(ctx).Model(&product).Delete(&product)
+func (rep *ProductRepo) SoftDelete(ctx context.Context, product *models.Product) error {
+	return rep.db.WithContext(ctx).Model(&product).Delete(&product).Error
 }
 
 // Recover. Відновлення м'яко видаленного товара
-func (rep *ProductRepo) Recover(ctx context.Context, product *models.Product) {
-	rep.db.WithContext(ctx).Unscoped().Model(&product).Update("DeletedAt", nil)
+func (rep *ProductRepo) Recover(ctx context.Context, product *models.Product) error {
+	return rep.db.WithContext(ctx).Unscoped().Model(&product).Update("DeletedAt", nil).Error
 }
 
 // Delete. Остаточне видалення товара
-func (rep *ProductRepo) Delete(ctx context.Context, product *models.Product) {
-	rep.db.WithContext(ctx).Unscoped().Delete(&product)
+func (rep *ProductRepo) Delete(ctx context.Context, product *models.Product) error {
+	return rep.db.WithContext(ctx).Unscoped().Delete(&product).Error
 }
 
 // Exists. Перевірка існування товара за ідентифікатором
-func (rep *ProductRepo) Exists(ctx context.Context, id int) bool {
+func (rep *ProductRepo) Exists(ctx context.Context, id int) (bool, error) {
 	var exists bool
-	rep.db.WithContext(ctx).Model(models.Product{}).Select("count(*) > 0").Where("id = ?", id).Find(&exists)
-	return exists
+	err := rep.db.WithContext(ctx).Model(models.Product{}).Select("count(*) > 0").Where("id = ?", id).Find(&exists).Error
+	return exists, err
 }
 
 // ExistsUnscoped. Перевірка існування м'яко видаленого товара за ідентифікатаром
-func (rep *ProductRepo) ExistsUnscoped(ctx context.Context, id int) bool {
+func (rep *ProductRepo) ExistsUnscoped(ctx context.Context, id int) (bool, error) {
 	var exists bool
-	rep.db.WithContext(ctx).Unscoped().Model(models.Product{}).Select("count(*) > 0").Where("id = ?", id).Find(&exists)
-	return exists
+	err := rep.db.WithContext(ctx).Unscoped().Model(models.Product{}).Select("count(*) > 0").Where("id = ?", id).Find(&exists).Error
+	return exists, err
 }
